@@ -3,8 +3,8 @@ import React from 'react'
 
 const Page = () => {
   return (
-    <div>
-      <SignUp path="/signUp" />
+    <div className="flex items-center justify-center h-screen">
+      <SignUp path="/signUp" signInUrl="/signIn" />
     </div>
   );
 }
