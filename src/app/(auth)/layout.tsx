@@ -8,7 +8,6 @@ export default function AuthLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider>
       <div className="authLayout py-4 px-16 h-screen flex flex-col">
         <header className="flex items-center justify-between">
           <Link href={"/"} className="font-mono ">
@@ -22,6 +21,5 @@ export default function AuthLayout({
         </header>
         <main className="flex-1 overflow-hidden">{children}</main>
       </div>
-    </ClerkProvider>
   );
 }
