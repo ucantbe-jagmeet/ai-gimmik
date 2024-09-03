@@ -19,7 +19,7 @@ export default function AuthLayout({
             </SignedIn>
           </div>
         </header>
-        <main className="flex-1 overflow-hidden">{children}</main>
+        <main className="flex-1 overflow-hidden h-full">{children}</main>
       </div>
   );
 }
