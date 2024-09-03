@@ -2,6 +2,7 @@
 import Image from "next/image";
 import { TypeAnimation } from "react-type-animation";
 import { useState } from "react";
+import Link from "next/link";
 
 
 export default function Home() {
@@ -20,9 +21,14 @@ export default function Home() {
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Atque
           perspiciatis ipsam aperiam voluptas aut, quas possimus neque accusamus
         </h3>
-        <button className="px-[25px] py-[15px] bg-[#217bfe] text-white rounded-[20px] text-[14px] mt-[20px] hover:bg-white hover:text-[#217bfe]">
-          Get Started
-        </button>
+        <div className="mt-5">
+          <Link
+            href={"/dashboard"}
+            className="px-6 py-3 bg-[#217bfe] text-white rounded-xl text-[14px]  hover:bg-white hover:text-[#217bfe]"
+          >
+            Get Started
+          </Link>
+        </div>
       </div>
       <div className="right flex-1 flex items-center justify-center h-full">
         <div className="imgContainer flex items-center justify-center rounded-xl bg-[#140e2d] w-4/5 height-1/2">
