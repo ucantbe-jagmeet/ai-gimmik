@@ -1,6 +1,12 @@
+'use client'
 import Image from "next/image";
-import botImg from "../../public/images/bot.png"
+import { TypeAnimation } from "react-type-animation";
+import { useState } from "react";
+
+
 export default function Home() {
+  const [typingStatus, setTypingStatus] = useState('human1');
+
   return (
     <div className="homepage flex items-center h-screen gap-28 px-20">
       <div className="left flex-1 flex-col items-center justify-center gap-4 text-center">
@@ -23,7 +29,56 @@ export default function Home() {
           <div className="bgContainer">
             <div className="bg"></div>
           </div>
-          <Image src={botImg} alt="" width={400} height={500} className="bot" />
+          <Image
+            src="/bot.png"
+            alt=""
+            width={400}
+            height={500}
+            className="bot"
+          />
+          <div className="chat absolute md:bottom-28 md:right-36 flex items-center gap-2 p-4 bg-[#2c2937] rounded-lg">
+            <Image
+              src={
+                typingStatus === "human1"
+                  ? "/human1.jpeg"
+                  : typingStatus === "human2"
+                  ? "/human2.jpeg"
+                  : "/bot.png"
+              }
+              alt=""
+              width={20}
+              height={20}
+              className="bot rounded-full h-12 w-12 mr-3 object-cover"
+            />
+            <TypeAnimation
+              sequence={[
+                "Optimize for Speed and Efficiency",
+                2000,
+                () => {
+                  setTypingStatus("bot");
+                },
+                "Optimize for UI Experience",
+                2000,
+                () => {
+                  setTypingStatus("human2");
+                },
+                "Optimize for Personalization Features",
+                2000,
+                () => {
+                  setTypingStatus("bot");
+                },
+                "Choose the Right AI Model",
+                2000,
+                () => {
+                  setTypingStatus("human2");
+                },
+              ]}
+              wrapper="span"
+              repeat={Infinity}
+              cursor={true}
+              omitDeletionAnimation={true}
+            />
+          </div>
         </div>
       </div>
     </div>
