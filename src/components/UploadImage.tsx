@@ -78,35 +78,35 @@ const UploadImage: React.FC<UploadImageProps> = ({ setImg }) => {
     };
 
         return (
-          <IKContext
-            urlEndpoint={urlEndpoint}
-            publicKey={publicKey}
-            authenticator={authenticator}
-          >
-            <IKUpload
-              fileName="test-upload.png"
-              onError={onError}
-              onSuccess={onSuccess}
-              useUniqueFileName
-              onUploadProgress={onUploadProgress}
-              onUploadStart={onUploadStart}
-              style={{ display: "none" }}
-              ref={ikUploadRef}
-            />
-            {
-              <label
-                onClick={() => ikUploadRef.current?.click()}
-                className="rounded-full bg-[#605e68] border-none p-2.5 flex items-center justify-center cursor-pointer"
-              >
-                <Image
-                  src="/attachment.png"
-                  alt="Upload"
-                  width={16}
-                  height={16}
+            <IKContext
+                urlEndpoint={urlEndpoint}
+                publicKey={publicKey}
+                authenticator={authenticator}
+            >
+                <IKUpload
+                fileName="test-upload.png"
+                onError={onError}
+                onSuccess={onSuccess}
+                useUniqueFileName
+                onUploadProgress={onUploadProgress}
+                onUploadStart={onUploadStart}
+                style={{ display: "none" }}
+                ref={ikUploadRef}
                 />
-              </label>
-            }
-          </IKContext>
+                {
+                <label
+                    onClick={() => ikUploadRef.current?.click()}
+                    className="rounded-full bg-[#605e68] border-none p-2.5 flex items-center justify-center cursor-pointer"
+                >
+                    <Image
+                    src="/attachment.png"
+                    alt="Upload"
+                    width={16}
+                    height={16}
+                    />
+                </label>
+                }
+            </IKContext>
         );
 };
 
