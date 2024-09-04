@@ -5,12 +5,8 @@ import { IKImage } from "imagekitio-react";
 import { model } from "@/lib/gemini";
 import ReplyMessage from "./ReplyMessage";
 import TextMessage from "./TextMessage";
-import Markdown from "react-markdown";
 
 const NewPrompt: React.FC = () => {
-  const endRef = useRef<HTMLDivElement | null>(null);
-
-  // State to handle image upload data
   const [imageData, setImageData] = useState<{
     isLoading: boolean;
     error?: string;
@@ -24,20 +20,41 @@ const NewPrompt: React.FC = () => {
   });
   const [question, setQuestion] = useState<string>("");
   const [answer, setAnswer] = useState<string>("");
-  useEffect(() => {
-    endRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [answer, question, imageData?.dbData]);
+  const endRef = useRef<HTMLDivElement | null>(null);
+
+    const chat = model.startChat({
+      history: [
+        {
+          role: 'user',
+          parts: [{ text: 'hello, i have two dogs in my house'}]
+        },
+        {
+          role: 'model',
+          parts: [{ text: 'great to meet you, what would uou like to know ?'}]
+        },
+      ],
+      generationConfig: {
+        // maxOutputTokens: 100,
+      },
+    });
+
 
   const add = async (text: string) => {
     try {
-      const result = await model.generateContent(
+      const result = await chat.sendMessageStream(
         Object.entries(imageData.aiData).length
           ? [imageData.aiData, text]
           : [text]
       );
-      const answerText = result.response;
-      if (!answerText) return;
-      setAnswer(answerText.text());
+
+      let accumulatedText = "";
+      for await (const chunk of result.stream) {
+        const chunkText = chunk.text();
+        console.log(chunkText);
+        accumulatedText += chunkText;
+        setAnswer(accumulatedText);
+      }
+
       setImageData({
         isLoading: false,
         error: "",
@@ -55,6 +72,10 @@ const NewPrompt: React.FC = () => {
     if (!text) return;
     add(text);
   };
+
+    useEffect(() => {
+      endRef.current?.scrollIntoView({ behavior: "smooth" });
+    }, [answer, question, imageData?.dbData]);
   return (
     <>
       {/* Add new chat */}
