@@ -13,9 +13,14 @@ const NewPrompt: React.FC = () => {
   // State to handle image upload data
   const [imageData, setImageData] = useState<{
     isLoading: boolean;
+    error?: string;
     dbData?: any;
+    aiData?: any;
   }>({
     isLoading: false,
+    error: '',
+    dbData: {},
+    aiData: {}
   });
   const [question, setQuestion] = useState<string>("");
   const [answer, setAnswer] = useState<string>("");
@@ -23,23 +28,32 @@ const NewPrompt: React.FC = () => {
     endRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [answer, question, imageData?.dbData]);
 
-  const add = async (text : string) => {
-      try {
-        const result = await model.generateContent(text);
-        const answerText = result.response;
-        if (!answerText) return;
-        setAnswer(answerText.text());
-        setQuestion(""); 
-      } catch (error) {
-        console.error("Error generating content:", error);
-      }
-  }; 
+  const add = async (text: string) => {
+    try {
+      const result = await model.generateContent(
+        Object.entries(imageData.aiData).length
+          ? [imageData.aiData, text]
+          : [text]
+      );
+      const answerText = result.response;
+      if (!answerText) return;
+      setAnswer(answerText.text());
+      setImageData({
+        isLoading: false,
+        error: "",
+        dbData: {},
+        aiData: {},
+      });
+    } catch (error) {
+      console.error("Error generating content:", error);
+    }
+  };
 
-  const handleSubmit = async (e:any) => {
-      e.preventDefault();
-      const text = e.target.text.value
-      if(!text) return
-      add(text)
+  const handleSubmit = async (e: any) => {
+    e.preventDefault();
+    const text = e.target.text.value;
+    if (!text) return;
+    add(text);
   };
   return (
     <>
