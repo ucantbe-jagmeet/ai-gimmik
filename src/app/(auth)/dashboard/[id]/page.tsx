@@ -9,7 +9,7 @@ import { useUser } from "@clerk/nextjs"; // Import Clerk's useUser hook
 
 interface IMessage {
   role: string;
-  parts: Array<{ _id: string; text: string}>;
+  parts: Array<{ _id: string; text: string }>;
 }
 
 interface IChat {
@@ -48,35 +48,32 @@ const ChatPage = () => {
     if (id) {
       fetchChat();
     }
-  }, [id, user]); 
+  }, [id, user]);
 
   return (
     <ChatWrapper className="chatPage relative h-full flex flex-col items-center">
       <div className="wrapper h-[80vh] w-full overflow-y-auto flex justify-center">
         {loading ? (
-          <p>Loading...</p> 
+          <p>Loading...</p>
         ) : chat ? (
-          <div className="chat w-1/2 flex pt-3 flex-col gap-y-2">
-            {chat.history.map(
-              (
-                message,
-                index
-              ) => (
-                <div key={index}>
-                  <ReplyMessage reply={message.role} />
-                  {message.parts.map((part, i) => (
-                    <TextMessage
-                      key={i}
-                      text={part.text}
-                    />
-                  ))}
-                </div>
-              )
-            )}
+          <>
+            {chat.history.map((message, index) => (
+              <div key={index} className="chat w-1/2 flex pt-3 flex-col gap-y-2">
+                {message.role === "model" ? (
+                  message.parts.map((part, i) => (
+                    <ReplyMessage key={i} reply={part.text} />
+                  ))
+                ) : (
+                  message.parts.map((part, i) => (
+                    <TextMessage key={i} text={part.text} />
+                  ))
+                )}
+              </div>
+            ))}
             <NewPrompt />
-          </div>
+            </>
         ) : (
-          <p>No chat data available.</p> 
+          <p>No chat data available.</p>
         )}
       </div>
     </ChatWrapper>
