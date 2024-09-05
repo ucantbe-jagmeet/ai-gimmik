@@ -1,8 +1,23 @@
+'use client'
 import DashBoardIcons from '@/components/DashBoardIcons';
 import Image from 'next/image';
 import React from 'react'
 
 const Page = () => {
+
+  const handleSubmit = async (e :any) => {
+    e.preventDefault();
+    const text = e.target.text.value;
+    if(!text) return
+
+      await fetch("/api/v1/chats", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ text }),
+      });
+  }
   return (
     <div className="dashboardPage h-full flex flex-col items-center">
       <div className="texts flex-1 flex items-center justify-center flex-col w-1/2 gap-10">
@@ -16,9 +31,10 @@ const Page = () => {
         </div>
       </div>
       <div className="formContainer mt-auto w-1/2 bg-[#2c2937] rounded-2xl flex">
-        <form className="w-full h-full flex items-center justify-between gap-5 mb-2.5">
+        <form className="w-full h-full flex items-center justify-between gap-5 mb-2.5" onSubmit={handleSubmit}>
           <input
             type="text"
+            name='text'
             placeholder="Ask me anything..."
             className="flex-1 px-5 py-3 bg-transparent border-none outline-none text-[#ececec]"
           />
