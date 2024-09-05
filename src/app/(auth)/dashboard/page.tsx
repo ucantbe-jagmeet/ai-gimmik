@@ -18,6 +18,7 @@ const Page = () => {
         body: JSON.stringify({ text }),
       });
   }
+  
   return (
     <div className="dashboardPage h-full flex flex-col items-center">
       <div className="texts flex-1 flex items-center justify-center flex-col w-1/2 gap-10">

@@ -1,11 +1,7 @@
 import React, { useEffect, useState } from "react";
 import LinkHelper from "./LinkHelper";
+import { IChat } from "@/types/type";
 
-export interface IChat {
-  _id: string;
-  title: string;
-  createdAt: Date;
-}
 
 const ListChat: React.FC = () => {
   const [chats, setChats] = useState<IChat[]>([]);

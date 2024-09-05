@@ -5,39 +5,38 @@ import { IKImage } from "imagekitio-react";
 import { model } from "@/lib/gemini";
 import ReplyMessage from "./ReplyMessage";
 import TextMessage from "./TextMessage";
+import { IUserChat } from "@/types/type";
 
-const NewPrompt: React.FC = () => {
+export interface INewPrompt {
+  data: IUserChat | null;
+}
+
+const NewPrompt: React.FC<INewPrompt> = ({ data }) => {
   const [imageData, setImageData] = useState<{
     isLoading: boolean;
     error?: string;
-    dbData?: any;
+    dbData?: { filePath?: string };
     aiData?: any;
   }>({
     isLoading: false,
-    error: '',
+    error: "",
     dbData: {},
-    aiData: {}
+    aiData: {},
   });
+
   const [question, setQuestion] = useState<string>("");
   const [answer, setAnswer] = useState<string>("");
   const endRef = useRef<HTMLDivElement | null>(null);
 
-    const chat = model.startChat({
-      history: [
-        {
-          role: 'user',
-          parts: [{ text: 'hello, i have two dogs in my house'}]
-        },
-        {
-          role: 'model',
-          parts: [{ text: 'great to meet you, what would uou like to know ?'}]
-        },
-      ],
-      generationConfig: {
-        // maxOutputTokens: 100,
-      },
-    });
-
+  const chat = model.startChat({
+    history: data?.history.map(({ role, parts }) => ({
+      role,
+      parts: parts.map((part) => ({ text: part.text })),
+    })),
+    generationConfig: {
+      // maxOutputTokens: 100,
+    },
+  });
 
   const add = async (text: string) => {
     try {
@@ -66,21 +65,24 @@ const NewPrompt: React.FC = () => {
     }
   };
 
-  const handleSubmit = async (e: any) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const text = e.target.text.value;
+    const text = (
+      e.currentTarget.elements.namedItem("text") as HTMLInputElement
+    ).value;
     if (!text) return;
-        
+
     add(text);
   };
 
-    useEffect(() => {
-      endRef.current?.scrollIntoView({ behavior: "smooth" });
-    }, [answer, question, imageData?.dbData]);
+  useEffect(() => {
+    endRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [answer, question, imageData?.dbData]);
+
   return (
     <>
       {/* Add new chat */}
-      {imageData.isLoading && <div className="">Loading...</div>}
+      {imageData.isLoading && <div>Loading...</div>}
       {!imageData.isLoading && imageData.dbData?.filePath && (
         <IKImage
           urlEndpoint={process.env.NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT!}
@@ -108,11 +110,10 @@ const NewPrompt: React.FC = () => {
           onChange={(e) => setQuestion(e.target.value)}
         />
         <button
-          type="button"
-          onClick={handleSubmit}
+          type="submit"
           className="rounded-full bg-[#605e68] border-none p-2.5 flex items-center justify-center"
         >
-          <Image src="/arrow.png" alt="" width={16} height={16} className="" />
+          <Image src="/arrow.png" alt="" width={16} height={16} />
         </button>
       </form>
     </>

@@ -6,24 +6,13 @@ import TextMessage from "@/components/TextMessage";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useUser } from "@clerk/nextjs"; // Import Clerk's useUser hook
-
-interface IMessage {
-  role: string;
-  parts: Array<{ _id: string; text: string }>;
-}
-
-interface IChat {
-  _id: string;
-  userId: string;
-  history: IMessage[];
-  createdAt: string;
-  updatedAt: string;
-}
+import { IKImage } from "imagekitio-react";
+import { IUserChat } from "@/types/type";
 
 const ChatPage = () => {
   const { user } = useUser();
   const [loading, setLoading] = useState<boolean>(true);
-  const [chat, setChat] = useState<IChat | null>(null);
+  const [chat, setChat] = useState<IUserChat | null>(null);
   const path = usePathname();
   const id = path.split("/")[2];
 
@@ -58,20 +47,32 @@ const ChatPage = () => {
         ) : chat ? (
           <>
             {chat.history.map((message, index) => (
-              <div key={index} className="chat w-1/2 flex pt-3 flex-col gap-y-2">
-                {message.role === "model" ? (
-                  message.parts.map((part, i) => (
-                    <ReplyMessage key={i} reply={part.text} />
-                  ))
-                ) : (
-                  message.parts.map((part, i) => (
-                    <TextMessage key={i} text={part.text} />
-                  ))
+              <div
+                key={index}
+                className="chat w-1/2 flex pt-3 flex-col gap-y-2"
+              >
+                {message?.img && (
+                  <IKImage
+                    urlEndpoint={process.env.NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT!}
+                    path={message.img}
+                    height={300}
+                    width={400}
+                    className="object-contain"
+                    loading="lazy"
+                    lqip={{ active: true, quality: 20 }}
+                  />
                 )}
+                {message.role === "model"
+                  ? message.parts.map((part, i) => (
+                      <ReplyMessage key={i} reply={part.text} />
+                    ))
+                  : message.parts.map((part, i) => (
+                      <TextMessage key={i} text={part.text} />
+                    ))}
               </div>
             ))}
-            <NewPrompt />
-            </>
+            {chat && <NewPrompt data={chat} />}
+          </>
         ) : (
           <p>No chat data available.</p>
         )}
