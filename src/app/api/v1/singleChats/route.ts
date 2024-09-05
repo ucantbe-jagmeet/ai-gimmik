@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { getAuth } from "@clerk/nextjs/server";
 import dbConnect from "@/lib/mongoDb";
 import Chat from "@/utils/models/chat";
-import UserChats from "@/utils/models/userChats";
 
 export async function GET(req: NextRequest) {
     await dbConnect();

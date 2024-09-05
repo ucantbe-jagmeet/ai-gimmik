@@ -2,21 +2,33 @@
 import DashBoardIcons from '@/components/DashBoardIcons';
 import Image from 'next/image';
 import React from 'react'
+import { useRouter } from "next/navigation";
 
-const Page = () => {
+const Page = () => {  
+  const router = useRouter();
 
   const handleSubmit = async (e :any) => {
     e.preventDefault();
     const text = e.target.text.value;
     if(!text) return
 
-      await fetch("/api/v1/chats", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ text }),
-      });
+    try {
+      
+    const resp = await fetch("/api/v1/chats", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ text }),
+    });
+
+    const { chatId } = await resp.json();
+
+    router.push(`/dashboard/${chatId}`);
+    } catch (error) {
+      
+    }
+
   }
   
   return (

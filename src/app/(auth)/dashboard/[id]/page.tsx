@@ -25,7 +25,7 @@ const ChatPage = () => {
           credentials: "include",
         });
         const data = await res.json();
-        console.log("ddata", data);
+        console.log("data", data);
         setChat(data);
       } catch (error) {
         console.error("Failed to fetch chat:", error);
@@ -39,43 +39,40 @@ const ChatPage = () => {
     }
   }, [id, user]);
 
+  if (loading) return (
+    <div className="wrapper h-[80vh] w-full overflow-y-auto flex flex-col items-center justify-center">
+      Loading ...
+    </div>
+  );
+
   return (
     <ChatWrapper className="chatPage relative h-full flex flex-col items-center">
-      <div className="wrapper h-[80vh] w-full overflow-y-auto flex justify-center">
-        {loading ? (
-          <p>Loading...</p>
-        ) : chat ? (
-          <>
-            {chat.history.map((message, index) => (
-              <div
-                key={index}
-                className="chat w-1/2 flex pt-3 flex-col gap-y-2"
-              >
-                {message?.img && (
-                  <IKImage
-                    urlEndpoint={process.env.NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT!}
-                    path={message.img}
-                    height={300}
-                    width={400}
-                    className="object-contain"
-                    loading="lazy"
-                    lqip={{ active: true, quality: 20 }}
-                  />
-                )}
-                {message.role === "model"
-                  ? message.parts.map((part, i) => (
-                      <ReplyMessage key={i} reply={part.text} />
-                    ))
-                  : message.parts.map((part, i) => (
-                      <TextMessage key={i} text={part.text} />
-                    ))}
-              </div>
-            ))}
-            {chat && <NewPrompt data={chat} />}
-          </>
-        ) : (
-          <p>No chat data available.</p>
-        )}
+      <div className="wrapper h-[80vh] w-full overflow-y-auto flex flex-col items-center justify-center">
+        {chat &&
+          chat.history.map((message, index) => (
+            <div key={index} className="chat h-full pt-2 w-1/2 flex flex-col gap-y-2">
+              {message?.img && (
+                <IKImage
+                  urlEndpoint={process.env.NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT!}
+                  path={message.img}
+                  height={300}
+                  width={400}
+                  className="object-contain w-[300px] h-[400px] m-5 self-end"
+                  loading="lazy"
+                />
+              )}
+              {message.role === "model"
+                ? message.parts.map((part, i) => (
+                    <ReplyMessage key={i} reply={part.text} />
+                  ))
+                : message.parts.map((part, i) => (
+                    <TextMessage key={i} text={part.text} />
+                  ))}
+            </div>
+          ))}
+            <div className="chat w-1/2 flex flex-col gap-y-2">
+              {chat && <NewPrompt data={chat} />}
+            </div>
       </div>
     </ChatWrapper>
   );

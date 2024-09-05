@@ -38,7 +38,9 @@ const NewPrompt: React.FC<INewPrompt> = ({ data }) => {
     },
   });
 
-  const add = async (text: string) => {
+  const add = async (text: string, isInitial: boolean) => {
+
+    if(!isInitial) setQuestion(text)
     try {
       const result = await chat.sendMessageStream(
         Object.entries(imageData.aiData).length
@@ -54,6 +56,9 @@ const NewPrompt: React.FC<INewPrompt> = ({ data }) => {
         setAnswer(accumulatedText);
       }
 
+      // Call the function to save the chat after receiving the answer
+      saveChat(text, accumulatedText, imageData.dbData?.filePath);
+
       setImageData({
         isLoading: false,
         error: "",
@@ -65,6 +70,32 @@ const NewPrompt: React.FC<INewPrompt> = ({ data }) => {
     }
   };
 
+  const saveChat = async (question: string, answer: string, img?: string) => {
+    try {
+      const response = await fetch(`/api/v1/updateChat?id=${data?._id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          question,
+          answer,
+          img,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        console.error("Failed to update chat:", result.message);
+      } else {
+        console.log("Chat updated successfully:", result.message);
+      }
+    } catch (err) {
+      console.error("Error updating chat:", err);
+    }
+  };
+
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const text = (
@@ -72,12 +103,24 @@ const NewPrompt: React.FC<INewPrompt> = ({ data }) => {
     ).value;
     if (!text) return;
 
-    add(text);
+    add(text, false);
   };
 
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [answer, question, imageData?.dbData]);
+
+  
+  const hasRun = useRef(false)
+  useEffect(() => {
+    if(!hasRun){
+      if (data?.history?.length === 1) {
+        add(data.history[0].parts[0].text, true);
+      }
+    }
+    hasRun.current = true
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <>
