@@ -1,7 +1,34 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import LinkHelper from "./LinkHelper";
 
-const ListChat = () => {
+export interface IChat {
+  _id: string;
+  title: string;
+  createdAt: Date;
+}
+
+const ListChat: React.FC = () => {
+  const [chats, setChats] = useState<IChat[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    const fetchChats = async () => {
+      try {
+        const res = await fetch("/api/v1/userChats", {
+          credentials: "include",
+        });
+        const data = await res.json();
+        setChats(data || []);
+      } catch (error) {
+        console.error("Failed to fetch chats:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchChats();
+  }, []); 
+
   return (
     <div className="chatList flex flex-col h-full w-full">
       <span className="title font-semibold text-[12px] mb-2">DASHBOARD</span>
@@ -10,14 +37,25 @@ const ListChat = () => {
       <LinkHelper href="/" title="Contact" />
       <hr className="border-none h-[2px] bg-[#ddd] opacity-10 my-4" />
       <span className="title font-semibold text-[12px] mb-2">RECENT CHATS</span>
-      <div className="list flex flex-col overflow-y-auto text-[14px]">
-        <LinkHelper href="/" title="My chat title" />
-        <LinkHelper href="/" title="My chat title" />
-        <LinkHelper href="/" title="My chat title" />
-        <LinkHelper href="/" title="My chat title" />
-        <LinkHelper href="/" title="My chat title" />
-        <LinkHelper href="/" title="My chat title" />
-      </div>
+
+      {loading ? (
+        <p className="text-[11px] text-center">Loading Chats..</p>
+      ) : (
+        <div className="list flex flex-col overflow-y-auto text-[14px]">
+          {chats.length ? (
+            chats.map((chat: IChat) => (
+              <LinkHelper
+                href={`/dashboard/${chat._id}`}
+                key={chat._id}
+                title={chat.title}
+              />
+            ))
+          ) : (
+            <p>No recent chats available.</p>
+          )}
+        </div>
+      )}
+
       <hr className="border-none h-[2px] bg-[#ddd] opacity-10 my-4" />
       <div className="upgrade mt-auto flex items-center justify-center gap-2 ">
         <h2 className="font-mono font-bold text-xl bg-white text-black rounded-full px-2 py-1 mr-1">
