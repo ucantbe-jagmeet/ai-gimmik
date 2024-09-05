@@ -14,8 +14,6 @@ export async function GET(req: NextRequest) {
 
     try {
         const userChats = await UserChats.find({ userId });
-        console.log('userchats', userChats);
-        
         return NextResponse.json(userChats[0]?.chats || [], { status: 200 });
     } catch (err) {
         console.error(err);

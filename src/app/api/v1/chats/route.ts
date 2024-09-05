@@ -9,11 +9,11 @@ export async function POST(req: NextRequest) {
 
     try {
     const { userId } = getAuth(req); 
-    console.log('getAuth', getAuth(req))
     if (!userId) {
         return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
 
+    
     const { text } = await req.json();
     const newChat = new Chat({
         userId: userId,
