@@ -25,7 +25,6 @@ const ChatPage = () => {
           credentials: "include",
         });
         const data = await res.json();
-        console.log("data", data);
         setChat(data);
       } catch (error) {
         console.error("Failed to fetch chat:", error);

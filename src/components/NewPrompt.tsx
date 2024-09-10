@@ -41,6 +41,7 @@ const NewPrompt: React.FC<INewPrompt> = ({ data }) => {
   const add = async (text: string, isInitial: boolean) => {
 
     if(!isInitial) setQuestion(text)
+      console.log('question', question)
     try {
       const result = await chat.sendMessageStream(
         Object.entries(imageData.aiData).length
@@ -112,9 +113,14 @@ const NewPrompt: React.FC<INewPrompt> = ({ data }) => {
 
   
   const hasRun = useRef(false)
+
   useEffect(() => {
-    if(!hasRun){
-      if (data?.history?.length === 1) {
+    if(!hasRun.current){
+      console.log("data?.history", data?.history?.length);
+      
+      if (data?.history?.length == 1) {
+        console.log("logger enters");
+        
         add(data.history[0].parts[0].text, true);
       }
     }
