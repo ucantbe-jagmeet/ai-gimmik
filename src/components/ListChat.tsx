@@ -44,7 +44,7 @@ const ListChat: React.FC = () => {
       {loading ? (
         <p className="text-[11px] text-center">Loading Chats..</p>
       ) : (
-        <div className="list flex flex-col overflow-y-auto ">
+        <div className="list flex flex-col overflow-y-auto custom-scrollbar">
           {chats.length ? (
             chats.map((chat: IChat) => (
               <LinkHelper

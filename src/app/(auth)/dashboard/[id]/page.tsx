@@ -46,10 +46,13 @@ const ChatPage = () => {
 
   return (
     <ChatWrapper className="chatPage relative h-full flex flex-col items-center">
-      <div className="wrapper h-[80vh] w-full overflow-y-auto flex flex-col items-center justify-center">
+      <div className="wrapper h-[80vh] w-full overflow-y-auto flex flex-col items-center justify-center custom-scrollbar">
         {chat &&
           chat.history.map((message, index) => (
-            <div key={index} className="chat h-full pt-2 w-1/2 flex flex-col gap-y-2">
+            <div
+              key={index}
+              className="chat h-full pt-2 w-1/2 flex flex-col gap-y-2 custom-scrollbar"
+            >
               {message?.img && (
                 <IKImage
                   urlEndpoint={process.env.NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT!}
@@ -69,9 +72,9 @@ const ChatPage = () => {
                   ))}
             </div>
           ))}
-            <div className="chat w-1/2 flex flex-col gap-y-2">
-              {chat && <NewPrompt data={chat} />}
-            </div>
+        <div className="chat w-1/2 flex flex-col gap-y-2 ">
+          {chat && <NewPrompt data={chat} />}
+        </div>
       </div>
     </ChatWrapper>
   );
