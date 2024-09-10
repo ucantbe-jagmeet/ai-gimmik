@@ -13,8 +13,11 @@ export async function GET(req: NextRequest) {
     }
 
     try {
-        const userChats = await UserChats.find({ userId });
-        return NextResponse.json(userChats[0]?.chats || [], { status: 200 });
+            const userChats = await UserChats.find({ userId });
+        if (userChats.length === 0) {
+            return NextResponse.json([], { status: 200 });
+        }
+        return NextResponse.json(userChats[0].chats, { status: 200 });
     } catch (err) {
         console.error(err);
         return NextResponse.json(

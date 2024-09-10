@@ -15,7 +15,7 @@ const DashBoardIcons:React.FC<IDashboardIcons> = ({imgSrc, title}) => {
         height={40}
         className="object-cover"
       />
-      <span className="text-[12px]">Create a New Chat</span>
+      <span className="text-[12px]">{title}</span>
     </div>
   );
 }

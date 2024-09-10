@@ -26,7 +26,7 @@ const Page = () => {
 
     router.push(`/dashboard/${chatId}`);
     } catch (error) {
-      
+      console.log('error', error)
     }
 
   }
@@ -38,9 +38,9 @@ const Page = () => {
           <h2>AI Gimmik</h2>
         </div>
         <div className="options  w-full flex items-center justify-between capitalize gap-12">
-          <DashBoardIcons imgSrc="/chat.png" title="Create a New Chat" />
-          <DashBoardIcons imgSrc="/image.png" title="Analyze Images" />
-          <DashBoardIcons imgSrc="/code.png" title="Help me with my Code" />
+          <DashBoardIcons imgSrc="/chat.png" title="Create a new chat" />
+          <DashBoardIcons imgSrc="/image.png" title="Analyze images" />
+          <DashBoardIcons imgSrc="/code.png" title="Help me with my code" />
         </div>
       </div>
       <div className="formContainer mt-auto w-1/2 bg-[#2c2937] rounded-2xl flex">

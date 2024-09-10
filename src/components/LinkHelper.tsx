@@ -11,7 +11,7 @@ const LinkHelper: React.FC<ILinkHelper> = ({ href, classes, title }) => {
   return (
     <Link
       href={href}
-      className={`${classes} p-[10px] rounded-md hover:bg-[#2c2937]`}
+      className={`${classes} p-[10px] capitalize rounded-md hover:bg-[#2c2937]`}
     >
       {title}
     </Link>
